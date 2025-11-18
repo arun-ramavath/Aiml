@@ -1,0 +1,69 @@
+graph={}
+edge_set=set()
+#add a node only if doesnot already exist
+def add_node(node):
+    if node in graph:
+        print(f" '{node}' already exists, please enter different node:")
+        return False
+    graph[node]=[]
+    return True
+#add edge only if not a duplicate
+def add_edge(u,v):
+    edge=tuple(sorted((u,v)))
+    if edge in edge_set:
+        print(f"Edge {u}-{v} already exsits ,please enter a different edge:")
+        return False
+    if u not in graph or v not in graph:
+        print("both nodes must be added before connecting them with edge")
+        return False
+    graph[u].append(v)
+    graph[v].append(u)
+    edge_set.add(edge)
+    return True
+#BFS
+def bfs(start):
+    visited=[]
+    queue=[start]
+    print("BFS:",end=" ")
+    while queue:
+        node=queue.pop(0)
+        if node not in visited:
+            print(node,end=" ")
+            visited.append(node)
+            for neighbor in graph[node]:
+                if neighbor not in visited:
+                    queue.append(neighbor)
+    print()
+#DFS
+def dfs(node,visited=None):
+    if visited is None:
+        visited=[]
+        print("DFS:",end=" ")
+    if node not in visited:
+        print(node,end=" ")
+        visited.append(node)
+        for neighbor in graph[node]:
+            dfs(neighbor,visited)
+#===input Section===
+#add unique nodes
+n=int(input("enter number of nodes:"))
+i=0
+while i<n:
+    node=input(f"Enter node{i+1}:").strip()
+    if add_node(node):
+        i+=1
+#add edges without duplication
+e=int(input("enter number of edges:"))
+for i in range(e):
+      while True:
+          u,v=input(f"enter edge {i+1} (two nodes):").split()
+          if add_edge(u,v):
+              break
+#start traversal
+start=input("enter starting node:").strip()
+if start in graph:
+    bfs(start)
+    dfs(start)
+    print()
+else:
+    print("starting node not found in graph:")
